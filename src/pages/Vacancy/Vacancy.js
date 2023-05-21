@@ -2,7 +2,6 @@ import {createStyles, Card, em, LoadingOverlay} from "@mantine/core";
 import {useQuery} from "react-query";
 import { getVacancy} from "../../api/Vacancies";
 import {Parser} from 'html-to-react'
-import {IconMapPin} from "@tabler/icons-react";
 import VacancyCard from "../../components/VacancyCard/VacancyCard";
 
 const useStyles = createStyles((theme) => ({
@@ -47,13 +46,12 @@ export default function Vacancy({id}) {
 
     if (isFetching) return <LoadingOverlay visible={isFetching} overlayBlur={2}/>
 
-
     return (
         <main className={classes.wrapper}>
 
             {!isLoading &&
                 <VacancyCard
-                id={id}
+                id={Number(id)}
                 title={data.profession}
                 location={data.town.title}
                 desc={data.type_of_work.title}
