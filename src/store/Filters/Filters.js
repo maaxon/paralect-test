@@ -1,6 +1,5 @@
 import {makeAutoObservable} from "mobx";
 
-
 class Filters{
     catalogue='';
     from ='';
@@ -29,7 +28,6 @@ class Filters{
     }
 
     clear(){
-        console.log(this.catalogue)
         this.catalogue='';
         this.from ='';
         this.to ='';

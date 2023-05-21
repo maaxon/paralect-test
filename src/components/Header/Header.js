@@ -67,7 +67,7 @@ const useStyles = createStyles((theme, {opened}) => ({
 }));
 
 
-export default function HeaderSimple({links}) {
+export default function AppHeader({links}) {
     const [opened, {toggle, close}] = useDisclosure(false);
     const {classes, cx} = useStyles({opened});
 
@@ -94,7 +94,7 @@ export default function HeaderSimple({links}) {
     return (
         <Header height={60} className={classes.header}>
 
-            <Group spacing={10} className={classes.logoContainer}><img src={logo} alt="logo"/> <h2>Jobored</h2></Group>
+            <Link to={'/'}><Group spacing={10} className={classes.logoContainer}><img src={logo} alt="logo"/> <h2>Jobored</h2></Group></Link>
             <Group spacing={5} className={classes.menu}>
                 {items}
             </Group>

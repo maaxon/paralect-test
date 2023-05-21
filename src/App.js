@@ -1,18 +1,18 @@
-import './App.css';
-import HeaderSimple from "./components/Header/Header";
-import {Route} from "wouter";
+import {Route, Router} from "wouter";
 import {Container, createStyles} from "@mantine/core";
-import Vacancies from "./pages/Vacancies/Vacancies";
-import Favorites from "./pages/Favorites/Favorites";
-import Vacancy from "./pages/Vacancy/Vacancy";
-import Empty from "./pages/Empty/Empty";
-
 import {
     QueryClient,
     QueryClientProvider,
 } from 'react-query';
 import {useEffect} from "react";
+
+import AppHeader from "./components/Header/Header";
+import Vacancies from "./pages/Vacancies/Vacancies";
+import Favorites from "./pages/Favorites/Favorites";
+import Vacancy from "./pages/Vacancy/Vacancy";
+
 import favorites from "./store/Favorites/Favorites";
+
 
 
 const queryClient = new QueryClient();
@@ -45,18 +45,19 @@ function App() {
         favorites.InitActives()
     })
 
+
+
     return (
-        <>
-            <HeaderSimple links={links}/>
+        <Router base={'/paralect-test'}>
+            <AppHeader links={links}/>
             <Container className={classes.mainWrapper} fluid>
                 <QueryClientProvider client={queryClient}>
-                    <Route path={'/'} component={Vacancies}/>
-                    <Route path={'/favorites'} component={Favorites}/>
-                    <Route path="/vacancy/:id">{({id}) => <Vacancy id={id}/>}</Route>
-                    <Route path={'/empty'} component={Empty}/>
+                        <Route path={'/'} component={Vacancies}/>
+                        <Route path={'/favorites'} component={Favorites}/>
+                        <Route path="/vacancy/:id">{({id}) => <Vacancy id={id}/>}</Route>
                 </QueryClientProvider>
             </Container>
-        </>
+        </Router>
     );
 }
 

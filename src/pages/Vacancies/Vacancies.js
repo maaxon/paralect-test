@@ -15,6 +15,7 @@ import Filters from "../../components/Filters/Filters";
 import {observer} from "mobx-react-lite";
 import filters from "../../store/Filters/Filters";
 import {getVacancies} from "../../api/Vacancies";
+import {Link} from "wouter";
 
 
 const useStyles = createStyles((theme) => ({
@@ -40,7 +41,6 @@ const useStyles = createStyles((theme) => ({
         padding: 0
     },
 
-
     pagination: {
         alignSelf: "center",
         marginTop: "2vh",
@@ -50,8 +50,7 @@ const useStyles = createStyles((theme) => ({
             width: "85vw",
             marginBottom: "2vh"
         },
-    }
-
+    },
 
 }));
 
@@ -62,7 +61,7 @@ function Vacancies() {
     const {classes} = useStyles();
 
     const {data, refetch, isFetching} = useQuery(
-        'repoData',
+        'getVacancies',
         () => getVacancies({
             payment_from: filters.from,
             payment_to: filters.to,
@@ -76,32 +75,38 @@ function Vacancies() {
 
     if (isFetching) return <LoadingOverlay visible={isFetching} overlayBlur={2}/>
 
-    console.log(data)
+    const onFiltersSubmit = () => {
+        refetch()
+        setPage(1)
+    }
+
     return (
         <main className={classes.main}>
-            <Filters onSubmit={() => {
-                refetch();
-                setPage(1)
-            }}/>
+            <Filters onSubmit={onFiltersSubmit}/>
 
             <Container className={classes.vacancies}>
                 <Input
                     icon={<IconSearch size="1rem"/>}
                     placeholder="Введите название вакансии"
                     rightSection={
-                        <div style={{right: 20}}><Button onClick={() => refetch()} size={"xs"}>Поиск</Button></div>
+                        <div style={{right: 20}}><Button onClick={() => refetch()} size={"xs"}
+                                                         data-elem="search-button">Поиск</Button></div>
                     }
                     rightSectionWidth={100}
                     value={filters.search}
                     onChange={(e) => filters.setSearch(e.target.value)}
+                    data-elem="search-input"
                 />
-                {data.objects && data.objects.slice((page - 1) * 4, page * 4).map(obj => <VacancyCard id={obj.id}
-                                                                                                      from={obj.payment_from}
-                                                                                                      to={obj.payment_to}
-                                                                                                      key={obj.id}
-                                                                                                      title={obj.profession}
-                                                                                                      desc={obj.type_of_work.title}
-                                                                                                      location={obj.town.title}/>)}
+
+                {data.objects && data.objects.slice((page - 1) * 4, page * 4).map(vacancy =><VacancyCard id={vacancy.id}
+                                                                                                      from={vacancy.payment_from}
+                                                                                                      to={vacancy.payment_to}
+                                                                                                      key={vacancy.id}
+                                                                                                      title={vacancy.profession}
+                                                                                                      desc={vacancy.type_of_work.title}
+                                                                                                      location={vacancy.town.title}
+                                                                                                      data-elem={`vacancy-${vacancy.id}`}/>)}
+
                 <Pagination siblings={1} defaultValue={1} value={page} total={Math.ceil(data.objects.length / 4)}
                             onChange={(page) => setPage(page)} className={classes.pagination}/>
 

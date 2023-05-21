@@ -4,7 +4,7 @@ import {useQuery} from "react-query";
 import {getFavorites} from "../../api/Favorites";
 import favorites from "../../store/Favorites/Favorites";
 import {observer} from "mobx-react-lite";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Empty from "../Empty/Empty";
 
 const useStyles = createStyles((theme) => ({
@@ -17,6 +17,12 @@ const useStyles = createStyles((theme) => ({
         [`@media (max-width: ${em(800)})`]: {
             width: "85vw",
         },
+
+    },
+
+    link:{
+        textDecoration:"none",
+        color:"none"
     }
 }));
 
@@ -26,32 +32,29 @@ const Favorites = () => {
     const {classes} = useStyles();
 
 
-    const {data, isFetching, isRefetching} = useQuery(
-        'getFavorites',
+    const {data, isFetching,isLoading} = useQuery(
+        [favorites.active],
         () => getFavorites(favorites.active)
     );
 
-    useEffect(() => {
-        if (data) favorites.InitFavorites(data.objects)
-    }, [data])
-
     const [page, setPage] = useState(1)
 
+    if (!favorites.active || favorites.active.length === 0) return <Empty/>
 
-    if (!favorites.cards || favorites.cards.length === 0) return <Empty/>
-
-    if (isFetching) return <LoadingOverlay visible={isRefetching} overlayBlur={2}/>
+    if (isFetching || isLoading) return <LoadingOverlay visible={isFetching || isLoading} overlayBlur={2}/>
 
     return (
         <>
             <div className={classes.wrapper}>
-                {!isFetching && favorites.cards.slice((page - 1) * 4, page * 4).map(obj => <VacancyCard id={obj.id}
-                                                                                                        from={obj.payment_from}
-                                                                                                        to={obj.payment_to}
-                                                                                                        key={obj.id}
-                                                                                                        title={obj.profession}
-                                                                                                        desc={obj.type_of_work.title}
-                                                                                                        location={obj.town.title}/>)}
+                {!isFetching && data.objects.slice((page - 1) * 4, page * 4).map(vacancy =>  <VacancyCard
+                    id={vacancy.id}
+                    from={vacancy.payment_from}
+                    to={vacancy.payment_to}
+                    key={vacancy.id}
+                    title={vacancy.profession}
+                    desc={vacancy.type_of_work.title}
+                    location={vacancy.town.title}
+                    data-elem={`vacancy-${vacancy.id}`}/>)}
             </div>
             {favorites.active.length > 4 &&
                 <Pagination onChange={(number) => setPage(number)} total={Math.ceil(data.objects.length / 4)}/>}
