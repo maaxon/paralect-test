@@ -105,7 +105,7 @@ function Vacancies() {
                                                                                                       title={vacancy.profession}
                                                                                                       desc={vacancy.type_of_work.title}
                                                                                                       location={vacancy.town.title}
-                                                                                                      data-elem={`vacancy-${vacancy.id}`}/>)}
+                                                                                                      />)}
 
                 <Pagination siblings={1} defaultValue={1} value={page} total={Math.ceil(data.objects.length / 4)}
                             onChange={(page) => setPage(page)} className={classes.pagination}/>

@@ -55,7 +55,7 @@ const VacancyCard = ({title, location, desc, from, id, to,titleColor="#5E96FC"})
     const {classes} = useStyles({titleColor});
 
     return (
-        <div className={classes.card}>
+        <div className={classes.card} data-elem={`vacancy-${id}`}>
             <div className={classes.content}>
                 <Link className={classes.link} to={`/vacancy/${id}`}>
                     <h3 className={classes.title}>{title}</h3>
