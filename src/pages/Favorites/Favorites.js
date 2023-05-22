@@ -54,7 +54,7 @@ const Favorites = () => {
                     title={vacancy.profession}
                     desc={vacancy.type_of_work.title}
                     location={vacancy.town.title}
-                    data-elem={`vacancy-${vacancy.id}`}/>)}
+                    />)}
             </div>
             {favorites.active.length > 4 &&
                 <Pagination onChange={(number) => setPage(number)} total={Math.ceil(data.objects.length / 4)}/>}
